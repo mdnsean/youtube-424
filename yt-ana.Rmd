@@ -1,0 +1,36 @@
+---
+title: "Youtube Trending Videos 4-24-18"
+author: "Sean Nguyen"
+date: "May 18, 2018"
+output: html_document
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(wordcloud)
+yt <- read_csv("data 4-24/USVideos.csv")
+```
+
+
+
+## Most Viewed Today
+```{r}
+yt %>% arrange(desc(views)) %>% .[1:10,] %>% select (title, channel_title, views) %>% rename(Video=title, Channel=channel_title, Views=views) %>% knitr::kable(.)
+```
+
+## Views vs Likes
+```{r}
+ggplot(data=yt) + geom_jitter(mapping = aes(x = views/1000000, y = likes/1000000)) + labs(title="Views vs Likes", x="Views (Millions)", y="Likes (Millions)") + scale_x_continuous(labels = scales::unit_format(unit="M")) + scale_y_continuous(labels = scales::unit_format(unit="M"))
+```
+
+Likes increase logarithmically with views, suggesting that earlier viewers are more likely to react (e.g. subscribers), while later viewers are less interested (maybe the video is on the Trending page at this point).
+The data points follow several distinct curves, which suggests that certain types of videos get more likes per view than others.
+
+```{r}
+ggplot(data=yt) + geom_jitter(mapping = aes(x = views, y = likes), color="green") + geom_jitter(mapping = aes(x = views, y = dislikes), color="red")
+
+```

@@ -1,21 +1,14 @@
-library(tidyverse)
-library(lubridate)
-library(wordcloud)
 
-(yt <- read_csv("data 4-24/USVideos.csv"))
-
-# Q: Are Likes proportional to views?
-# A: Yes, the Likes seem to increase logarithmically with views. 
-ggplot(data=yt) + geom_jitter(mapping = aes(x = views, y = likes))
-
-# If we plot the likes and dislikes together, we see that both likes and dislikes increase logarithmically with the number of views.
-# Interestingly, the data points seem to follow one of several trend lines of varying "slopes". 
+--------------------- Red dislikes overlaid on green? -------------
 
 # The data points follow logarithmic curves, which may suggest that the first viewers are the type to react: subscribers and those who seek out that content.
 # Videos with higher view counts have a smaller proportion of viewer reactions, which may that the additional viewers are people outside of the target audience, who are less likely to react.
  
 ggplot(data=yt) + geom_jitter(mapping = aes(x = views, y = likes), color="green") + geom_jitter(mapping = aes(x = views, y = dislikes), color="red")
-ggplot(data=yt) + geom_jitter(mapping = aes(x = views, y = comment_count, color="blue"))
+#ggplot(data=yt)
++ geom_jitter(mapping = aes(x = views, y = comment_count, color="blue"))
+
+--------------------------------
 
 # Q: What are the most viewed videos today?
 yt %>% arrange(desc(views)) %>% .[1:10,]
