@@ -8,20 +8,6 @@ ggplot(data=yt) + geom_jitter(mapping = aes(x = views, y = likes), color="green"
 #ggplot(data=yt)
 + geom_jitter(mapping = aes(x = views, y = comment_count, color="blue"))
 
---------------------------------
-
-# Q: What are the most viewed videos today?
-yt %>% arrange(desc(views)) %>% .[1:10,]
-
-# Q: Which channels have the most trending videos today?
-# A: Most of the top 10 channels are sports channels or talk shows. Channels like ESPN have a broad appeal and often post lots of short clips each day.
-yt_by_channel <- group_by(yt, channel_title) %>% summarise (channel_videos = n(), channel_views = sum(views)) %>% mutate(views_per_video = channel_views / channel_videos) %>% arrange(desc(channel_videos))
-yt_by_channel %>% arrange(desc(channel_videos)) %>% .[1:10,] %>% ggplot + geom_col(aes(x=channel_title, y=channel_videos)) + coord_flip()
-
-# Q: Which channels have the highest view count per video today?
-# A: Mostly music video channels of mainstream artists.
-yt_by_channel %>% arrange(desc(views_per_video)) %>% .[1:10,] %>% ggplot + geom_col(aes(x=channel_title, y=views_per_video)) + coord_flip()
-
 # Q: Which categories are the most popular?
 # A: 1) Entertainment, 2) Music, 3) How-to & Style, 4) Comedy, 5) People & Blogs
 # Entertainment is the most popular by far (7281)
@@ -43,6 +29,10 @@ ggplot(data=yt) + geom_point(mapping = aes(x=nchar(description), y=views))
 # Q: Does having a long description correlate with less views?
 # A: No. Videos with more descriptions longer than 3000 characters sometimes achieve up to 10M views.
 filter(yt, nchar(description) > 3000) %>% ggplot + geom_point(mapping = aes(x=nchar(description), y=views))
+
+
+------------------^^ ignore: --------------
+  --------------- to do: ------------------
 
 # ----------------------------------------------------------
 # Q: How quickly do videos start to trend?

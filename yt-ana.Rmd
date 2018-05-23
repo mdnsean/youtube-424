@@ -2,10 +2,10 @@
 title: "Youtube Trending Videos 4-24-18"
 author: "Sean Nguyen"
 date: "May 18, 2018"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
-
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,11 +16,28 @@ yt <- read_csv("data 4-24/USVideos.csv")
 ```
 
 
-
-## Most Viewed Today
+## Most Viewed Videos Today
 ```{r}
-yt %>% arrange(desc(views)) %>% .[1:10,] %>% select (title, channel_title, views) %>% rename(Video=title, Channel=channel_title, Views=views) %>% knitr::kable(.)
+yt %>% arrange(desc(views)) %>% .[1:10,] %>% select (title, channel_title, views) %>% rename(Video=title, Channel=channel_title, Views=views) %>% mutate(Rank=seq.int(nrow(.))) %>% select(Rank, Video, Channel, Views) %>% knitr::kable(.)
 ```
+
+## Channels With Most Trending Videos
+```{r}
+yt_by_channel <- group_by(yt, channel_title) %>% summarise (channel_videos = n(), channel_views = sum(views)) %>% mutate(views_per_video = channel_views / channel_videos) %>% arrange(desc(channel_videos))
+
+yt_by_channel$channel_title <- factor(yt_by_channel$channel_title, levels = yt_by_channel$channel_title[order(yt_by_channel$channel_videos)])
+yt_by_channel %>% arrange(desc(channel_videos)) %>% .[1:10,] %>% ggplot + geom_col(aes(x=channel_title, y=channel_videos, fill=channel_videos)) + coord_flip() + labs(title="Channels With Most Trending Videos", x="Channel", y="Videos") + theme(legend.position="none")
+```
+
+Most of the top 10 channels are sports channels or talk shows. Channels like ESPN have a broad appeal and often post lots of short clips each day.
+
+## Average Views Per Video
+```{r}
+yt_by_channel$channel_title <- factor(yt_by_channel$channel_title, levels = yt_by_channel$channel_title[order(yt_by_channel$views_per_video)])
+yt_by_channel %>% arrange(desc(views_per_video)) %>% .[1:10,] %>% ggplot + geom_col(aes(x=channel_title, y=views_per_video/1000000, fill=views_per_video)) + coord_flip() + labs(title="Average Views Per Video", x="Channel", y="Views Per Video (Millions)") + scale_y_continuous(labels = scales::unit_format(unit="M")) + theme(legend.position="none")
+```
+
+Mostly mainstream music, except for Kylie Jenner and YouTube Spotlight.
 
 ## Views vs Likes
 ```{r}
