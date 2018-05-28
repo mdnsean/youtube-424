@@ -1,6 +1,7 @@
-# youtube-trending
-Exploratory data analysis: Trending youtube videos
+# Trending Youtube Videos
+## Exploratory Data Analysis
 
-.Rmd file: Underlying R Markdown
+See the formatted report:
+http://htmlpreview.github.io/?https://github.com/mdnsean/youtube-trending/blob/master/yt-ana.html
 
-.html file: Final Report
+The .Rmd file contains the R code used to produce the final report.
