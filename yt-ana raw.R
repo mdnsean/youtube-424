@@ -34,30 +34,6 @@ filter(yt, nchar(description) > 3000) %>% ggplot + geom_point(mapping = aes(x=nc
 ------------------^^ ignore: --------------
   --------------- to do: ------------------
 
-# ----------------------------------------------------------
-# Q: How quickly do videos start to trend?
-yt <- mutate(yt,publish_date=as.Date(publish_time), trending_as_date=as.Date(trending_date, "%y.%d.%m"))
-yt <- mutate(yt, days_to_trend=as.integer(trending_as_date - publish_date))
-
-# A: Most videos start trending after about a week, although a handful take up to a few years.
-
-yt %>% ggplot + geom_density(mapping=(aes(x=log10(days_to_trend+1))), adjust=2) + geom_vline(aes(xintercept=log10(7+1)), color="blue", linetype="dashed") + annotate("text", x=1, y=.25, label="7 days", angle=90, color="blue")
-
-# Close up of videos that trend within a week; a few videos trend the same day they are uploaded.
-yt %>% filter(days_to_trend <= 7) %>% ggplot + geom_bar(mapping=(aes(x=days_to_trend)))
-
-# Q: How long do they keep trending?
-yt <- mutate(yt, days_trending = as.integer(as.Date("2018-04-24", "%Y-%m-%d") - trending_as_date))
-yt %>% ggplot + geom_histogram(mapping=aes(x=days_trending, alpha=..count..), binwidth=10, center=5, color="black") + scale_x_continuous(breaks=seq(0,180,20)) + theme(legend.position="none")
-
-# Q: What about the videos trending today?
-# A: Some videos uploaded in the early 2000s are still trending today, 
-# but the vast majority of today's trending videos were uploaded within the past 12 months.
-ggplot(yt) + geom_freqpoly(mapping=aes(x=publish_time)) +
-  scale_x_datetime(limits = c(as.POSIXct("2005-01-01"), as.POSIXct("2016-12-31")))
-
-ggplot(yt) + geom_freqpoly(mapping=aes(x=publish_time)) +
-  scale_x_datetime(date_breaks="2 months", date_labels="%b", limits = c(as.POSIXct("2017-04-25"), as.POSIXct("2018-04-25"))) + labs(x="Uploaded in 2018")
 
 # -------------------------------------
 
